@@ -6,8 +6,8 @@
     },
     "channels": [
         {
-            "name": "Sirius TV [k]",
-            "slug": "siriushd",
+            "name": "SiriusTV [k]",
+            "slug": "siriustv",
             "url": "https://kick.com/elvin-4k-pro"
         },
         {
