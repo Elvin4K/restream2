@@ -6,14 +6,14 @@
     },
     "channels": [
         {
-            "name": "Sirius TV [Kick]",
-            "slug": "3siriushd.kick3",
+            "name": "Sirius TV [k]",
+            "slug": "siriushd",
             "url": "https://kick.com/elvin-4k-pro"
         },
         {
-            "name": "Gence TV [Kick]",
-            "slug": "gence.kick",
-            "url": "https://kick.com/gence_kanal_adin"
+            "name": "SiriusHDTV [t]",
+            "slug": "siriushdtv",
+            "url": "https://www.twitch.tv/siriushdtv"
         }
     ]
 }
