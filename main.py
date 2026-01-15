@@ -45,7 +45,7 @@ def main():
     
     print(f"Creating folders:")
     print(f"  Root: {root_folder}")
-    print(f"  Best (Clap4k): {best_folder}")
+    print(f"  Best (Stream4kPro): {best_folder}")
     
     os.makedirs(best_folder, exist_ok=True)
     
