@@ -15,7 +15,7 @@ def info_to_text(stream_info, url):
     
     text += 'FRAME-RATE=25.000,'
     text += 'CODECS="avc1.640029,mp4a.40.2",'
-    text += 'NAME="1080p Premium"' # Buraya istediğin ismi yazdım
+    text += 'NAME="1080p Premium"' # İstediğin Premium ismi
 
     text = text + "\n" + url + "\n"
     return text
@@ -49,7 +49,6 @@ def main():
     
     os.makedirs(best_folder, exist_ok=True)
     
-    # Master folder only if defined
     if master_folder_name:
         master_folder = os.path.join(root_folder, master_folder_name)
         os.makedirs(master_folder, exist_ok=True)
@@ -68,25 +67,20 @@ def main():
         print(f"  URL: {url}")
         
         try:
-            # Get streams and playlists
+            # Get streams
             streams = streamlink.streams(url)
             
-            if not streams:
+            if not streams or 'best' not in streams:
                 print(f"  ⚠️  No streams found for {slug}")
                 fail_count += 1
                 continue
-                
-            if 'best' not in streams:
-                print(f"  ⚠️  No 'best' stream found for {slug}")
-                fail_count += 1
-                continue
             
-            playlists = streams['best'].multivariant.playlists
+            best_stream = streams['best']
+            playlists = best_stream.multivariant.playlists
 
             # Text preparation
             previous_res_height = 0
-            master_text = ''
-            best_text = ''
+            best_text_content = ''
 
             for playlist in playlists:
                 uri = playlist.uri
@@ -94,24 +88,23 @@ def main():
                 if info.video != "audio_only": 
                     sub_text = info_to_text(info, uri)
                     if info.resolution.height > previous_res_height:
-                        master_text = sub_text + master_text
-                        best_text = sub_text
-                    else:
-                        master_text = master_text + sub_text
+                        best_text_content = sub_text
                     previous_res_height = info.resolution.height
             
-            if master_text:
-                if streams['best'].multivariant.version:
-                    best_text = '#EXT-X-VERSION:' + str(streams['best'].multivariant.version) + "\n" + best_text
-                best_text = '#EXTM3U\n' + best_text
+            if best_text_content:
+                # HEADER OLUŞTURMA - İşte burası senin istediğin yer
+                final_output = "#EXTM3U\n"
+                final_output += "#EXT-X-VERSION:3\n"
+                final_output += "#EXT-X-INDEPENDENT-SEGMENTS\n" # İstediğin satırı ekledim
+                final_output += best_text_content
 
-            # File operations
-            best_file_path = os.path.join(best_folder, channel["slug"] + ".m3u8")
+                # File operations
+                best_file_path = os.path.join(best_folder, channel["slug"] + ".m3u8")
 
-            if best_text:
                 with open(best_file_path, "w+") as best_file:
-                    best_file.write(best_text)
-                print(f"  ✅ Success - File created in Clap4k")
+                    best_file.write(final_output)
+                
+                print(f"  ✅ Success - File created with Independent Segments")
                 success_count += 1
             else:
                 print(f"  ⚠️  No content generated for {slug}")
